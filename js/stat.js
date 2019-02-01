@@ -9,7 +9,7 @@
  В новом файле js/stat.js определите функцию renderStatistics, которая будет
  являться методом объекта window, со следующими параметрами:
  •  ctx — канвас на котором рисуется игра.
- •  names — массив, с именами игроков прошедших уровень. Имя самого
+ •  players — массив, с именами игроков прошедших уровень. Имя самого
  игрока — Вы. Массив имён формируется случайным образом.
  •  times — массив, по длине совпадающий с массивом names. Массив
  содержит время прохождения уровня соответствующего игрока
@@ -30,23 +30,22 @@
  отрисовки текста на канвасе является то, что он не поддерживает
  перенос, поэтому каждая новая строчка должна быть отрисована
  новым вызовом метода fillText или strokeText.
- 4.  После сообщения о победе должна располагаться гистограмма времён
- участников. Параметры гистограммы следующие:
- o  Высота гистограммы 150px.
- o  Ширина колонки 40px.
- o  Расстояние между колонками 50px.
- o  Цвет колонки игрока Выrgba(255, 0, 0, 1).
- o  Цвет колонок других игроков — синий, а насыщенность задаётся
- случайным образом.
- Обратите внимание
- Функцию отрисовки статистики вызывать не надо. Её будет вызывать
- непосредственно сама игра из файла js/game.js.
- Обратите внимание
- Время прохождения игры должно быть округлено к целому числу.
- * @type {number}
+ * Обратите внимание
+ * Функцию отрисовки статистики вызывать не надо. Её будет вызывать
+ * непосредственно сама игра из файла js/game.js.
+ * Обратите внимание
+ * Время прохождения игры должно быть округлено к целому числу.
  */
+'use strict';
 var CLOUD_WIDTH = 420;
 var CLOUD_HEIGHT = 270;
+var CLOUD_X = 100;
+var CLOUD_Y = 10;
+var GAP = 10; // отступ от края облака
+var COLUMN_HEIGHT = 150;
+var COLUMN_WIDTH = 40;
+var COLUMN_BETWIN = 50;
+
 
 /**
  * Функция отрисовки облака
@@ -59,44 +58,82 @@ var CLOUD_HEIGHT = 270;
  */
 var renderCloud = function (ctx, x, y, collor) {
   // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  // ctx.fillRect(110, 20, 420,270);
+  // ctx.fillRect(x+10, y+10, CLOUD_WIDTH, CLOUD_HEIGHT);
   // ctx.fillStyle = '#ffffff';
-  // ctx.fillRect(100,10, 420,270);
+  // ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
   ctx.fillStyle = collor;
   ctx.beginPath();
-  ctx.moveTo(x + 20, y + 167);
-  ctx.bezierCurveTo(x, y + 215, x + 41, y + CLOUD_HEIGHT, x + 92, y + CLOUD_HEIGHT);
-  ctx.bezierCurveTo(x + 175, y + CLOUD_HEIGHT, x + 247, y + CLOUD_HEIGHT, x + 332, y + CLOUD_HEIGHT);
-  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH, y + 230, x + 382, y + 194);
-  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + 167, x + CLOUD_WIDTH, y + 100, x + 372, y + 94);
-  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + 16, x + CLOUD_HEIGHT, y, x + 210, y + 44);
-  ctx.bezierCurveTo(x + 185, y + 27, x + 47, y, x + 51, y + 77);
-  ctx.bezierCurveTo(x, y + 74, x, y + 127, x + 20, y + 167);
-  // ctx.closePath();
-  ctx.stroke();
+  ctx.moveTo(x + 20, y + 170);
+  ctx.bezierCurveTo(x, y + 220, x + 20, y + CLOUD_HEIGHT, x + 100, y + CLOUD_HEIGHT);
+  ctx.bezierCurveTo(x + 180, y + CLOUD_HEIGHT, x + 240, y + CLOUD_HEIGHT, x + 340, y + CLOUD_HEIGHT);
+  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH, y + 200, x + 380, y + 180);
+  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + 160, x + CLOUD_WIDTH, y + 100, x + 380, y + 80);
+  ctx.bezierCurveTo(x + CLOUD_WIDTH, y - 20, x + CLOUD_HEIGHT, y - 20, x + 200, y + 20);
+  ctx.bezierCurveTo(x + 180, y - 20, x, y, x + 40, y + 80);
+  ctx.bezierCurveTo(x, y + 80, x, y + 130, x + 20, y + 170);
+  ctx.closePath();
+  //ctx.stroke();
   ctx.fill();
-  // Заголовок в облаке | Конструкция ниже как в game.js
-  ctx.fillStyle = '#000';
-  ctx.font = '16px PT Mono';
-  var message = 'Ура вы победили!\n Список результатов:';
-  message.split('\n').forEach(function (line, i) {
-    ctx.fillText(line, x + 100, y + 70 + 20 * i);
-  });
 };
 
 /**
  * Функция вывода статистики
  * @param {Object} ctx
- * @param {array} names
+ * @param {array} players
  * @param {array} times
  */
-window.renderStatistics = function (ctx, names, times) {
+window.renderStatistics = function (ctx, players, times) {
 
-  renderCloud(ctx, 110, 20, 'rgba(0, 0, 0, 0.7)');
-  renderCloud(ctx, 100, 10, '#ffffff');
+  // Вызываем renderCloud() для отрисовки тени облака
+  renderCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, 'rgba(0, 0, 0, 0.7)');
+  // Вызываем renderCloud() для отрисовки облака
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#ffffff');
 
-  // Отрисовка гистограммы в облаке
 
+  /**
+   * 3. Отрисовка заголовка в облаке | Конструкция ниже как в game.js
+   * На облаке должен быть отрисован текст сообщения ’Ура
+   * вы победили!\nСписок результатов:’с помощью метода fillText. Текст
+   * должен быть набран шрифтом PT Mono размером 16px. NB! Особенностью
+   * отрисовки текста на канвасе является то, что он не поддерживает
+   * перенос, поэтому каждая новая строчка должна быть отрисована
+   * новым вызовом метода fillText или strokeText.
+   * @type {string}
+   */
+  ctx.fillStyle = '#000';
+  ctx.font = '16px PT Mono';
+  ctx.textBaseline = 'hanging';
+  var message = 'Ура вы победили!\nСписок результатов:';
+  message.split('\n').forEach(function (line, i) {
+    ctx.fillText(line, CLOUD_X + 120, CLOUD_Y + 30 + 20 * i);
+  });
 
+  /**
+   * 4. Отрисовка гистограммы в облаке
+   * После сообщения о победе должна располагаться гистограмма времён
+   * участников. Параметры гистограммы следующие:
+   * o  Высота гистограммы 150px.
+   * o  Ширина колонки 40px.
+   * o  Расстояние между колонками 50px.
+   * o  Цвет колонки игрока Вы rgba(255, 0, 0, 1).
+   * o  Цвет колонок других игроков — синий, а насыщенность задаётся
+   * случайным образом.
+   * */
+  var colorPlayer;
+  var maxTime = Math.max(...times); //Наибольший элемент в массиве
+  // пропорциональный столбик (высота) = (times[i] * COLUMN_HEIGHT) / maxTime
+
+  players.forEach(function(item, i, arr) {
+    var columnHeight = (times[i] * COLUMN_HEIGHT) / maxTime; // высота каждого столбца, пропорционально максимальному
+                                                            // (за максимальный принимаем maxTime=COLUMN_HEIGHT=150px;
+    if (players[i] === "You") {
+      colorPlayer = 'rgba(255, 0, 0, 1)';
+    }
+    else {
+      colorPlayer = `rgba(${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)}, 255, 1)`;
+    }
+    ctx.fillStyle = colorPlayer;
+    ctx.fillRect(CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 8 + (COLUMN_HEIGHT - columnHeight), COLUMN_WIDTH, columnHeight );
+    ctx.fillText(item, CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 9 + COLUMN_HEIGHT);
+  });
 };
-

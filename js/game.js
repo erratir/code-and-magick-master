@@ -47,7 +47,7 @@ window.Game = (function () {
     HIT_THE_MARK: 4
   };
 
-  var NAMES = ['Кекс', 'Катя', 'Игорь'];
+  var NAMES = ['Mark', 'John', 'Eva'];
 
   /**
    * Порядок прохождения уровней.
@@ -472,7 +472,7 @@ window.Game = (function () {
       var minTimeInSec = 1000;
 
       var statistic = {
-        'Вы': time
+        'You': time
       };
 
       for (var i = 0; i < NAMES.length; i++) {
