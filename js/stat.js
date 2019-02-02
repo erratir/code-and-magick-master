@@ -1,3 +1,4 @@
+/* global window: false */
 /**
  * В форке учебного проекта создайте ветку module2-task1 и в этой ветке выполните
  следующие шаги:
@@ -36,16 +37,15 @@
  * Обратите внимание
  * Время прохождения игры должно быть округлено к целому числу.
  */
-'use strict';
-var CLOUD_WIDTH = 420;
-var CLOUD_HEIGHT = 270;
-var CLOUD_X = 100;
-var CLOUD_Y = 10;
-var GAP = 10; // отступ от края облака
-var COLUMN_HEIGHT = 150;
-var COLUMN_WIDTH = 40;
-var COLUMN_BETWIN = 50;
 
+let CLOUD_WIDTH = 420;
+let CLOUD_HEIGHT = 270;
+let CLOUD_X = 100;
+let CLOUD_Y = 10;
+let GAP = 10; // отступ от края облака
+let COLUMN_HEIGHT = 150;
+let COLUMN_WIDTH = 40;
+let COLUMN_BETWIN = 50;
 
 /**
  * Функция отрисовки облака
@@ -56,7 +56,7 @@ var COLUMN_BETWIN = 50;
  * @param {number} y
  * @param {string} collor
  */
-var renderCloud = function (ctx, x, y, collor) {
+let renderCloud = function (ctx, x, y, collor) {
   // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
   // ctx.fillRect(x+10, y+10, CLOUD_WIDTH, CLOUD_HEIGHT);
   // ctx.fillStyle = '#ffffff';
@@ -72,7 +72,7 @@ var renderCloud = function (ctx, x, y, collor) {
   ctx.bezierCurveTo(x + 180, y - 20, x, y, x + 40, y + 80);
   ctx.bezierCurveTo(x, y + 80, x, y + 130, x + 20, y + 170);
   ctx.closePath();
-  //ctx.stroke();
+  // ctx.stroke();
   ctx.fill();
 };
 
@@ -85,10 +85,9 @@ var renderCloud = function (ctx, x, y, collor) {
 window.renderStatistics = function (ctx, players, times) {
 
   // Вызываем renderCloud() для отрисовки тени облака
-  renderCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, 'rgba(0, 0, 0, 0.7)');
+  renderCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, `rgba(0, 0, 0, 0.7)`);
   // Вызываем renderCloud() для отрисовки облака
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#ffffff');
-
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, `#ffffff`);
 
   /**
    * 3. Отрисовка заголовка в облаке | Конструкция ниже как в game.js
@@ -100,11 +99,11 @@ window.renderStatistics = function (ctx, players, times) {
    * новым вызовом метода fillText или strokeText.
    * @type {string}
    */
-  ctx.fillStyle = '#000';
-  ctx.font = '16px PT Mono';
-  ctx.textBaseline = 'hanging';
-  var message = 'Ура вы победили!\nСписок результатов:';
-  message.split('\n').forEach(function (line, i) {
+  ctx.fillStyle = `#000`;
+  ctx.font = `16px PT Mono`;
+  ctx.textBaseline = `hanging`;
+  let message = `Ура вы победили!\nСписок результатов:`;
+  message.split(`\n`).forEach(function (line, i) {
     ctx.fillText(line, CLOUD_X + 120, CLOUD_Y + 30 + 20 * i);
   });
 
@@ -119,21 +118,20 @@ window.renderStatistics = function (ctx, players, times) {
    * o  Цвет колонок других игроков — синий, а насыщенность задаётся
    * случайным образом.
    * */
-  var colorPlayer;
-  var maxTime = Math.max(...times); //Наибольший элемент в массиве
+  let colorPlayer;
+  let maxTime = Math.max(...times); // Наибольший элемент в массиве
   // пропорциональный столбик (высота) = (times[i] * COLUMN_HEIGHT) / maxTime
 
-  players.forEach(function(item, i, arr) {
-    var columnHeight = (times[i] * COLUMN_HEIGHT) / maxTime; // высота каждого столбца, пропорционально максимальному
-                                                            // (за максимальный принимаем maxTime=COLUMN_HEIGHT=150px;
-    if (players[i] === "You") {
-      colorPlayer = 'rgba(255, 0, 0, 1)';
-    }
-    else {
+  players.forEach(function (item, i) {
+    let columnHeight = (times[i] * COLUMN_HEIGHT) / maxTime; // высота каждого столбца, пропорционально максимальному
+    // (за максимальный принимаем maxTime=COLUMN_HEIGHT=150px;
+    if (players[i] === `You`) {
+      colorPlayer = `rgba(255, 0, 0, 1)`;
+    } else {
       colorPlayer = `rgba(${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)}, 255, 1)`;
     }
     ctx.fillStyle = colorPlayer;
-    ctx.fillRect(CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 8 + (COLUMN_HEIGHT - columnHeight), COLUMN_WIDTH, columnHeight );
+    ctx.fillRect(CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 8 + (COLUMN_HEIGHT - columnHeight), COLUMN_WIDTH, columnHeight);
     ctx.fillText(item, CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 9 + COLUMN_HEIGHT);
   });
 };

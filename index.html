@@ -190,7 +190,7 @@
    •  Установите скорость мага wizardSpeed равной 3.
    •  Установите ширину мага wizardWidth равной 70.
    */
-  var fireballSize = 22, wizardSpeed = 3, wizardWidth = 70;
+  let fireballSize = 22, wizardSpeed = 3, wizardWidth = 70;
 
   /**
    * Объявите переменную getFireballSpeed, которая будет управлять
@@ -202,7 +202,7 @@
    * @param left
    * @returns {number}
    */
-  var getFireballSpeed = function (left) {
+  let getFireballSpeed = function (left) {
     return left ? 5 : 2;
   };
 
@@ -213,7 +213,7 @@
    * @param wizardWidth
    * @returns {number}
    */
-  var getWizardHeight = function (wizardWidth) {
+  let getWizardHeight = function (wizardWidth) {
     return 1.337 * wizardWidth;
   };
 
@@ -226,7 +226,7 @@
    * по горизонтали. Напишите функцию так, чтобы центр фигурки мага
    * находился посередине игрового поля.
    *
-   * @param width
+   * @param {number} width
    * @returns {number}
    */
   function getWizardX(width) {
@@ -240,7 +240,7 @@
    * функцией, игра будет использовать, чтобы задать положение мага
    * по вертикали. Напишите функцию так, чтобы маг появлялся на высоте две
    * трети игрового поля от земли.
-   * @param height
+   * @param {number} height
    * @returns {number}
    */
   function getWizardY(height) {
