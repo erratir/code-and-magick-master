@@ -63,16 +63,24 @@
   <div class="demo"></div>
 
   <div class="setup-open">
-    <img src="./img/user-1.jpg" class="setup-open-icon">
+    <img src="./img/user-1.jpg" class="setup-open-icon" tabindex="0">
   </div>
 </header>
 
 <div class="overlay setup hidden">
+  <!-- 6. Форма должна отправляться на урл https://js.dump.academy/code-and-magick
+  методом POST с типом multipart/form-data -->
   <form class="setup-wizard-form"
         method="post"
         enctype="multipart/form-data"
+        action="https://js.dump.academy/code-and-magick"
         autocomplete="off">
-
+<!-- 2. Валидация ввода имени персонажа. Имя персонажа вводится в
+поле .setup-user-name. Добавьте следующие ограничения:
+- имя персонажа не может содержать менее 2 символов;
+- максимальная длина имени персонажа — 25 символов.
+Для указания ограничений на ввод используйте стандартные возможности
+форм HTML5. -->
     <div class="setup-title">
       <div class="setup-user">
         <div class="upload">
@@ -80,13 +88,11 @@
           <input type="file" name="avatar">
         </div>
         <label>
-          <input type="text" name="username"
-                 maxlength="25" required
-                 class="setup-user-name" value="Синий Пендальф"/>
+          <input type="text" name="username" maxlength="25" minlength="2" required class="setup-user-name" value="Синий Пендальф"/>
         </label>
       </div>
 
-      <span class="setup-close">&times;</span>
+      <span class="setup-close" tabindex="0">&times;</span>
     </div>
 
 

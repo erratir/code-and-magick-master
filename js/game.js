@@ -1,5 +1,5 @@
 'use strict';
-
+// TODO: err -> ES6 ?
 window.GameConstants = {
   Fireball: {
     size: window.fireballSize || 24,
