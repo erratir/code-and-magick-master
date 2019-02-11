@@ -38,14 +38,26 @@
  * Время прохождения игры должно быть округлено к целому числу.
  */
 
-let CLOUD_WIDTH = 420;
-let CLOUD_HEIGHT = 270;
-let CLOUD_X = 100;
-let CLOUD_Y = 10;
-let GAP = 10; // отступ от края облака
-let COLUMN_HEIGHT = 150;
-let COLUMN_WIDTH = 40;
-let COLUMN_BETWIN = 50;
+let Cloud = {
+  WIDTH: 420,
+  HEIGHT: 270,
+  X: 100,
+  Y: 10,
+  GAP: 10, // отступ от края облака
+  COLOR: `#fff`,
+  SHADOW_COLOR: `rgba(0, 0, 0, 0.7)`,
+};
+
+let Bar = {
+  MAX_HEIGHT: 150,
+  WIDTH: 40,
+  BETWIN: 50,
+};
+
+let Text = {
+  FONT: `16px PT Mono`,
+  COLOR: `#000`,
+};
 
 /**
  * Функция отрисовки облака
@@ -58,17 +70,17 @@ let COLUMN_BETWIN = 50;
  */
 let renderCloud = function (ctx, x, y, collor) {
   // ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  // ctx.fillRect(x+10, y+10, CLOUD_WIDTH, CLOUD_HEIGHT);
+  // ctx.fillRect(x+10, y+10, Cloud.WIDTH, Cloud.HEIGHT);
   // ctx.fillStyle = '#ffffff';
-  // ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+  // ctx.fillRect(x, y, Cloud.WIDTH, Cloud.HEIGHT);
   ctx.fillStyle = collor;
   ctx.beginPath();
   ctx.moveTo(x + 20, y + 170);
-  ctx.bezierCurveTo(x, y + 220, x + 20, y + CLOUD_HEIGHT, x + 100, y + CLOUD_HEIGHT);
-  ctx.bezierCurveTo(x + 180, y + CLOUD_HEIGHT, x + 240, y + CLOUD_HEIGHT, x + 340, y + CLOUD_HEIGHT);
-  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH, y + 200, x + 380, y + 180);
-  ctx.bezierCurveTo(x + CLOUD_WIDTH, y + 160, x + CLOUD_WIDTH, y + 100, x + 380, y + 80);
-  ctx.bezierCurveTo(x + CLOUD_WIDTH, y - 20, x + CLOUD_HEIGHT, y - 20, x + 200, y + 20);
+  ctx.bezierCurveTo(x, y + 220, x + 20, y + Cloud.HEIGHT, x + 100, y + Cloud.HEIGHT);
+  ctx.bezierCurveTo(x + 180, y + Cloud.HEIGHT, x + 240, y + Cloud.HEIGHT, x + 340, y + Cloud.HEIGHT);
+  ctx.bezierCurveTo(x + Cloud.WIDTH, y + Cloud.HEIGHT, x + Cloud.WIDTH, y + 200, x + 380, y + 180);
+  ctx.bezierCurveTo(x + Cloud.WIDTH, y + 160, x + Cloud.WIDTH, y + 100, x + 380, y + 80);
+  ctx.bezierCurveTo(x + Cloud.WIDTH, y - 20, x + Cloud.HEIGHT, y - 20, x + 200, y + 20);
   ctx.bezierCurveTo(x + 180, y - 20, x, y, x + 40, y + 80);
   ctx.bezierCurveTo(x, y + 80, x, y + 130, x + 20, y + 170);
   ctx.closePath();
@@ -85,9 +97,9 @@ let renderCloud = function (ctx, x, y, collor) {
 window.renderStatistics = function (ctx, players, times) {
 
   // Вызываем renderCloud() для отрисовки тени облака
-  renderCloud(ctx, CLOUD_X + 10, CLOUD_Y + 10, `rgba(0, 0, 0, 0.7)`);
+  renderCloud(ctx, Cloud.X + 10, Cloud.Y + 10, Cloud.SHADOW_COLOR);
   // Вызываем renderCloud() для отрисовки облака
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, `#ffffff`);
+  renderCloud(ctx, Cloud.X, Cloud.Y, Cloud.COLOR);
 
   /**
    * 3. Отрисовка заголовка в облаке | Конструкция ниже как в game.js
@@ -99,12 +111,12 @@ window.renderStatistics = function (ctx, players, times) {
    * новым вызовом метода fillText или strokeText.
    * @type {string}
    */
-  ctx.fillStyle = `#000`;
-  ctx.font = `16px PT Mono`;
+  ctx.fillStyle = Text.COLOR;
+  ctx.font = Text.FONT;
   ctx.textBaseline = `hanging`;
   let message = `Ура вы победили!\nСписок результатов:`;
   message.split(`\n`).forEach(function (line, i) {
-    ctx.fillText(line, CLOUD_X + 120, CLOUD_Y + 30 + 20 * i);
+    ctx.fillText(line, Cloud.X + 120, Cloud.Y + 30 + 20 * i);
   });
 
   /**
@@ -118,20 +130,21 @@ window.renderStatistics = function (ctx, players, times) {
    * o  Цвет колонок других игроков — синий, а насыщенность задаётся
    * случайным образом.
    * */
-  let colorPlayer;
+  let barColor;
   let maxTime = Math.max(...times); // Наибольший элемент в массиве
-  // пропорциональный столбик (высота) = (times[i] * COLUMN_HEIGHT) / maxTime
+  // пропорциональный столбик (высота) = (times[i] * Bar.MAX_HEIGHT) / maxTime
 
   players.forEach(function (item, i) {
-    let columnHeight = (times[i] * COLUMN_HEIGHT) / maxTime; // высота каждого столбца, пропорционально максимальному
-    // (за максимальный принимаем maxTime=COLUMN_HEIGHT=150px;
+    let barHeight = (times[i] * Bar.MAX_HEIGHT) / maxTime; // высота каждого столбца, пропорционально максимальному
+    // (за максимальный принимаем maxTime=Bar.MAX_HEIGHT=150px;
     if (players[i] === `You`) {
-      colorPlayer = `rgba(255, 0, 0, 1)`;
+      barColor = `rgba(255, 0, 0, 1)`;
     } else {
-      colorPlayer = `rgba(${Math.floor(Math.random() * 50)}, ${Math.floor(Math.random() * 50)}, 255, 1)`;
+      barColor = `hsl(240, ${Math.floor(Math.random() * 100)}%, 50%)`; // Синий, случайная насыщенность в HSL
     }
-    ctx.fillStyle = colorPlayer;
-    ctx.fillRect(CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 8 + (COLUMN_HEIGHT - columnHeight), COLUMN_WIDTH, columnHeight);
-    ctx.fillText(item, CLOUD_X + COLUMN_BETWIN + (COLUMN_WIDTH + COLUMN_BETWIN) * i, CLOUD_Y + GAP * 9 + COLUMN_HEIGHT);
+    ctx.fillStyle = barColor;
+    ctx.fillRect(Cloud.X + Bar.BETWIN + (Bar.WIDTH + Bar.BETWIN) * i, Cloud.Y + Cloud.GAP * 8 + (Bar.MAX_HEIGHT - barHeight), Bar.WIDTH, barHeight);
+    ctx.fillText(item, Cloud.X + Bar.BETWIN + (Bar.WIDTH + Bar.BETWIN) * i, Cloud.Y + Cloud.GAP * 9 + Bar.MAX_HEIGHT);
   });
 };
+
