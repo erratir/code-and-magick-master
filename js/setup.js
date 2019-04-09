@@ -97,8 +97,8 @@
     }
   };
 
+  // -------------  изменение цвета по клику: куртка, глаза, фаербол
   window.colorize(wizardCoat, window.DataWizards.COAT_COLOR, wizardCoatInput);
   window.colorize(wizardEyes, window.DataWizards.EYES_COLOR, wizardEyesInput);
   window.colorize(wizardFireball, window.DataWizards.FIREBALL_COLOR, wizardFireballInput);
-
 })();
