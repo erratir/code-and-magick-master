@@ -1,6 +1,6 @@
 /* global window: false */
 
-let URL_GET = ` https://js.dump.academy/code-and-magick/data`;
+let URL_GET = `https://js.dump.academy/code-and-magick/data`;
 let URL_POST = `https://js.dump.academy/code-and-magick`;
 let TIMEOUT = 5000;
 

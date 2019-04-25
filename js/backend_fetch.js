@@ -4,7 +4,7 @@
   // в html прописано действие по умолчанию для кнопки сохранить (`.setup-wizard-form`)
 
   let URLS = {
-    GET_DATA: `https://js.dump.academy/kekstagram/data`,
+    GET_DATA: `https://js.dump.academy/code-and-magick/data`,
     POST: `https://js.dump.academy/code-and-magick`,
   };
 
