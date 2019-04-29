@@ -91,15 +91,17 @@
 
     window.backend.getData()
       .then(function (data) {
-        wizards = data; // В массив wizards записываем полученные данные с сервера (массив из 17 волшебников)
-        wizards = window.utils.shuffle(wizards); // перемешаем массив ыолшебников случайным образом
-        // TODO выбрать из всего массива волшебников именно похожих
-        renderWizards(); // поскольку запрос к сервиру асинхронный дальнейший renderWizards() запускаем отсюда
-      }).then(null, function () { // В случае ошибки, генерируем похожих волшебников
-        for (let i = 0; i < window.DataWizards.COUNT; i++) {
-          wizards.push(new Wizard());
-          renderWizards();
+        if (data) {
+          wizards = data; // В массив wizards записываем полученные данные с сервера (массив из 17 волшебников)
+          wizards = window.utils.shuffle(wizards); // перемешаем массив ыолшебников случайным образом
+          // TODO выбрать из всего массива волшебников именно похожих
+        } else {
+          // В случае, если getData() вернул null (ответ сервера ==! 200), генерируем похожих волшебников из моковых данных
+          for (let i = 0; i < window.DataWizards.COUNT; i++) {
+            wizards.push(new Wizard());
+          }
         }
+        renderWizards(); // поскольку запрос к сервиру асинхронный дальнейший renderWizards() запускаем отсюда
       });
   };
 

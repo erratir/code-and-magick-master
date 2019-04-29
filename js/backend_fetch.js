@@ -13,7 +13,13 @@
       return fetch(URLS.GET_DATA, {
         method: `get`,
       }).then(function (response) {
+        if (response.status !== 200) {
+          return null;
+        }
         return response.json();
+      }).catch(function (error) {
+        // TODO Обрботка ошибки
+        window.console.log(`Ошибка отправки данных на сервер: ${error.message}. Повторите попытку позже`);
       });
     },
     postData(URL, formData) {
