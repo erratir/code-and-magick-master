@@ -25,6 +25,8 @@
   let wizardFireball = document.querySelector(`.setup-fireball-wrap`);
   let wizardFireballInput = document.querySelector(`input[name = fireball-color]`); // скрытое поле формы, отправляется на сервер
 
+  let form = document.querySelector(`.setup-wizard-form`); // Форма / окно настройки персонажа
+
   /**
    *  ------------------------------------------------   module4-task1
    */
@@ -44,6 +46,23 @@
     document.querySelector(`.setup-similar`).classList.remove(`hidden`);
     // 1.4.1 Когда окно настройки персонажа открыто, нажатие на клавишу ESC должно закрывать диалог
     document.addEventListener(`keydown`, popupEscPressHandler);
+
+    /**
+     * module6: 4. Доработайте обработчик отправки формы, который вы делали в задании
+     * «#14 Учебный проект: одеть Надежду», так чтобы он отменял действие
+     * формы по умолчанию и отправлял данные формы
+     */
+    form.addEventListener(`submit`, function (evt) {
+      evt.preventDefault();
+      window.backend.postData(`https://js.dump.academy/code-and-magick`, new window.FormData(form)
+      ).then(function (response) {
+        if (response) {
+          // здесь обрабатываем json который вернул сервер (response)
+          // window.console.log(response);
+          closeSetupPopup();
+        }
+      });
+    });
   };
 
   /**
