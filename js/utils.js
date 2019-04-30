@@ -7,6 +7,16 @@
   window.utils = {
 
     /**
+     *  Функция возвращает массив с уникальными элементами
+     * Только в ES6 https://webformyself.com/kak-proizvesti-udalenie-dublej-massiva-v-es6/
+     * @param {array} arr
+     * @return {any[]}
+     */
+    returnUniqueArray(arr) {
+      return Array.from(new Set(arr));
+    },
+
+    /**
      * Функция, возвращает случайный элемемент массива
      * https://learn.javascript.ru/array
      * @param {array} array

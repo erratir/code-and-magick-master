@@ -1,4 +1,4 @@
-/* global window: false */
+/* global window, document: false */
 
 /**
  * Изменение цвета (мантии, глаз, фаербола) персонажа по нажатию
@@ -12,9 +12,9 @@
    * Который при клике по элементу заливает (.fill) HTMLElement случайным цветом. Если это div, то (.background)
    * А также если передан inputElement (скрытое поле формы, которое потом отправляется на сервер), записывает в него цвет
    * querySelector(`input[name = coat-color]`) || `input[name = eyes-color]` || `input[name = fireball-color]`
-   * @param {HTMLElement} element
+   * @param {Element} element
    * @param {Array} colorArr Массив цветов из которых необходимо выбрать случайный
-   * @param {HTMLElement} inputElement
+   * @param {Element} inputElement
    */
   window.colorize = function (element, colorArr, inputElement) {
     element.addEventListener(`click`, function () {
@@ -28,6 +28,8 @@
       if (inputElement) {
         inputElement.value = color;
       }
+      // перерисовываем похожих волшебников
+      window.similarWiz.updateWizards(document.querySelector(`.wizard-coat`).style.fill, document.querySelector(`.wizard-eyes`).style.fill);
     });
 
   };
