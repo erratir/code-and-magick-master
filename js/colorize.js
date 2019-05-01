@@ -28,9 +28,10 @@
       if (inputElement) {
         inputElement.value = color;
       }
-      // перерисовываем похожих волшебников
-      window.similarWiz.updateWizards(document.querySelector(`.wizard-coat`).style.fill, document.querySelector(`.wizard-eyes`).style.fill);
+      // перерисовываем похожих волшебников (с устранением дребезга)
+      window.debounce(function () {
+        window.similarWiz.updateWizards(document.querySelector(`.wizard-coat`).style.fill, document.querySelector(`.wizard-eyes`).style.fill);
+      }, 300);
     });
-
   };
 })();
